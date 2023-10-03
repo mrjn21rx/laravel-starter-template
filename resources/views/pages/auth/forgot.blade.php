@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Forgot Password')
+@section('title', 'Lupa Password')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -11,10 +11,14 @@
         <div class="card-header">
             <h4>Lupa Password</h4>
         </div>
-
         <div class="card-body">
             <p class="text-muted">Kami akan kirimkan link untuk reset password anda</p>
-            <form method="POST" action="#">
+            @if (session('status'))
+                <div class="alert alert-success mt-2">
+                    {{ session('status') }}
+                </div>
+            @endif
+            <form method="POST" action="{{ url('/forgot-password') }}">
                 @csrf
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -29,7 +33,7 @@
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
-                        Ganti Password
+                        Kirim Link
                     </button>
                 </div>
             </form>

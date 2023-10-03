@@ -14,6 +14,11 @@
             <h4 class="text-center">Sistem Informasi Grosir dan Penjualan</h4>
         </div>
         <div class="card-body">
+            @if (session('status'))
+                <div class="alert alert-success mt-2">
+                    {{ session('status') }}
+                </div>
+            @endif
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="form-group">
@@ -40,7 +45,7 @@
                     <div class="d-block">
                         <label for="password" class="control-label">Password</label>
                         <div class="float-right">
-                            <a href="{{ url('/forgot-password') }}" class="text-small">
+                            <a href="{{ route('password.request') }}" class="text-small">
                                 Lupa Password
                             </a>
                         </div>
