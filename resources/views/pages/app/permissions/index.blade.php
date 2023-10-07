@@ -10,14 +10,14 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Halaman Permission</h1>
+                <h1>Halaman Hak Izin</h1>
             </div>
             <div class="section-body">
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Data Permissions</h4>
+                                <h4>Data Hak Izin</h4>
                             </div>
                             <div class="card-body">
                                 <form action="{{ route('app.permissions') }}" method="GET">

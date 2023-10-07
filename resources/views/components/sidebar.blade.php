@@ -28,7 +28,7 @@
                         <a class="nav-link" href="{{ route('app.permissions') }}">Izin Akses</a>
                     </li>
                     <li class="{{ Request::is('transparent-sidebar') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('transparent-sidebar') }}">Transparent Sidebar</a>
+                        <a class="nav-link" href="{{ route('app.roles.index') }}">Hak Akses</a>
                     </li>
                     <li class="{{ Request::is('layout-top-navigation') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ url('layout-top-navigation') }}">Top Navigation</a>
