@@ -11,7 +11,7 @@
     <div class="card card-primary">
         <div class="card-header d-block">
             <h3 class="text-center" style="color: #6777ef;">SIGAP</h3>
-            <h4 class="text-center">Sistem Informasi Grosir dan Penjualan</h4>
+            <h4 class="text-center">Upindo Borneo Raya</h4>
         </div>
         <div class="card-body">
             @if (session('status'))
