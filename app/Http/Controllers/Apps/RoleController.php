@@ -45,14 +45,12 @@ class RoleController extends Controller
             //redirect dengan pesan error
             return redirect()->route('app.roles.index')->with(['error' => 'Data Gagal Disimpan!']);
         }
-
-        // dd($request->all());
     }
 
-    public function edit(Role $role)
+    public function edit($id)
     {
         //get role
-        $role = Role::with('permissions', $role->permissions);
+        $role = Role::with('permissions')->findOrFail($id);
         //get all permissions
         $permissions = Permission::all();
         //redirect back to roles page
@@ -66,6 +64,8 @@ class RoleController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'permissions' => 'required'
+        ], [
+            'name.required' => 'Nama Hak Akses Harus Diisi',
         ]);
 
         //update role
@@ -77,7 +77,13 @@ class RoleController extends Controller
         $role->syncPermissions($request->permissions);
 
         //redirect back to roles page
-        return redirect()->route('pages.app.roles.index');
+        if ($role) {
+            //redirect dengan pesan sukses
+            return redirect()->route('app.roles.index')->with(['success' => 'Data Berhasil Diperbarui!']);
+        } else {
+            //redirect dengan pesan error
+            return redirect()->route('app.roles.index')->with(['error' => 'Data Gagal Diperbarui!']);
+        }
     }
 
 
