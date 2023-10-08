@@ -62,13 +62,15 @@
                                                     <td class="text-center">
 
                                                         @can('roles.edit')
-                                                            <a href="#" class="btn btn-success btn-sm">
+                                                            <a href="{{ route('app.roles.edit', $role->id) }}"
+                                                                class="btn btn-success btn-sm">
                                                                 <i class="fa fa-pencil-alt me-1" title="Edit Hak Akses">
                                                                 </i>
                                                             </a>
                                                         @endcan
                                                         @can('roles.delete')
-                                                            <button class="btn btn-danger btn-sm"><i class="fa fa-trash"
+                                                            <button onclick="Delete(this.id)" id="{{ $role->id }}"
+                                                                class="btn btn-danger btn-sm"><i class="fa fa-trash"
                                                                     title="Hapus Hak Akses"></i>
                                                             </button>
                                                         @endcan
@@ -91,26 +93,36 @@
                                 <h4>Tambah Hak Akses</h4>
                             </div>
                             <div class="card-body">
-                                <form action="">
+                                <form action="{{ route('app.roles.store') }}" method="POST">
+                                    @csrf
                                     <div class="form-group">
-                                        <label>Your Name</label>
-                                        <input type="text" class="form-control" required="">
+                                        <label>Nama Hak Akses</label>
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                            name="name">
+                                        @error('name')
+                                            <div class="invalid-feedback" style="display: block">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label>Email</label>
-                                        <input type="email" class="form-control" required="">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Subject</label>
-                                        <input type="email" class="form-control">
-                                    </div>
-                                    <div class="form-group mb-0">
-                                        <label>Message</label>
-                                        <textarea class="form-control" data-height="150" required=""></textarea>
+                                        <label>Hak Izin</label>
+                                        <br>
+                                        @foreach ($permissions as $permission)
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox"
+                                                    value="{{ $permission->name }}" id="check-{{ $permission->id }}"
+                                                    name="permissions[]">
+                                                <label class="form-check-label"
+                                                    for="check-{{ $permission->id }}">{{ $permission->name }}</label>
+                                            </div>
+                                        @endforeach
                                     </div>
                                     <div class="text-right mt-3">
-                                        <button class="btn btn-sm btn-primary" type="submit">Submit</button>
-                                        <button class="btn btn-sm btn-warning" type="reset">Reset</button>
+                                        <button class="btn btn-sm btn-primary" type="submit">
+                                            <i class="fa fa-paper-plane"></i> Submit</button>
+                                        <button class="btn btn-sm btn-warning" type="reset">
+                                            <i class="fa fa-redo"></i> Reset</button>
                                     </div>
                                 </form>
                             </div>
@@ -127,6 +139,67 @@
     <script>
         function resetPage() {
             window.location.reload();
+        }
+    </script>
+
+    <script>
+        function Delete(id) {
+            var id = id;
+            var token = $("meta[name='csrf-token']").attr("content");
+
+            swal({
+                title: "APAKAH KAMU YAKIN ?",
+                text: "INGIN MENGHAPUS DATA INI!",
+                icon: "warning",
+                buttons: [
+                    'TIDAK',
+                    'YA'
+                ],
+                dangerMode: true,
+            }).then(function(isConfirm) {
+                if (isConfirm) {
+
+                    //ajax delete
+                    jQuery.ajax({
+                        url: "/app/roles/" + id,
+                        data: {
+                            "id": id,
+                            "_token": token
+                        },
+                        type: 'DELETE',
+                        success: function(response) {
+                            if (response.status == "success") {
+                                swal({
+                                    title: 'BERHASIL!',
+                                    text: 'DATA BERHASIL DIHAPUS!',
+                                    icon: 'success',
+                                    timer: 1000,
+                                    showConfirmButton: false,
+                                    showCancelButton: false,
+                                    buttons: false,
+                                }).then(function() {
+                                    location.reload();
+                                });
+                            } else {
+                                swal({
+                                    title: 'GAGAL!',
+                                    text: 'DATA GAGAL DIHAPUS!',
+                                    icon: 'error',
+                                    timer: 1000,
+                                    showConfirmButton: false,
+                                    showCancelButton: false,
+                                    buttons: false,
+                                }).then(function() {
+                                    location.reload();
+                                });
+                            }
+                        }
+                    });
+
+                } else {
+                    return true;
+                }
+            })
         }
     </script>
     <!-- Page Specific JS File -->

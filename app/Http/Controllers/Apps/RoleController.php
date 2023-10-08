@@ -16,7 +16,10 @@ class RoleController extends Controller
             $roles = $roles->where('name', 'like', '%' . request()->q . '%');
         })->with('permissions')->latest()->paginate(10);
 
-        return view('pages.app.roles.index', compact('roles'));
+        //get permission all
+        $permissions = Permission::all();
+
+        return view('pages.app.roles.index', compact('roles', 'permissions'));
     }
 
     public function store(Request $request)
@@ -25,18 +28,25 @@ class RoleController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'permissions' => 'required'
+        ], [
+            'name.required' => 'Nama Hak Akses Harus Diisi',
         ]);
 
-        //create new role
-        $role = Role::create([
-            'name' => $request->name
-        ]);
+        //create role
+        $role = Role::create(['name' => $request->name]);
 
         //assign permissions to role
         $role->givePermissionTo($request->permissions);
 
-        //redirect back to roles page
-        return redirect()->route('pages.app.roles.index');
+        if ($role) {
+            //redirect dengan pesan sukses
+            return redirect()->route('app.roles.index')->with(['success' => 'Data Berhasil Disimpan!']);
+        } else {
+            //redirect dengan pesan error
+            return redirect()->route('app.roles.index')->with(['error' => 'Data Gagal Disimpan!']);
+        }
+
+        // dd($request->all());
     }
 
     public function edit(Role $role)
@@ -71,13 +81,21 @@ class RoleController extends Controller
     }
 
 
-    public function delete(Role $role)
+    public function destroy($id)
     {
         //find role by id
-        $role = Role::findOrFail($role);
+        $role = Role::findOrFail($id);
         //delete role
         $role->delete();
-        //redirect back to roles page
-        return redirect()->route('pages.app.roles.index');
+        //check for status destroy
+        if ($role) {
+            return response()->json([
+                'status' => 'success'
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error'
+            ]);
+        }
     }
 }
