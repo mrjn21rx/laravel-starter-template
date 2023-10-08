@@ -37,39 +37,42 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col" style="width: 5%">No</th>
-                                                <th scope="col">Nama Hak Akses</th>
-                                                <th scope="col">Nama Hak Izin</th>
+                                                <th scope="col">Nama Lengkap</th>
+                                                <th scope="col">Nama Pengguna</th>
+                                                <th scope="col">Hak Akses</th>
                                                 <th scope="col" style="width: 15%">Pilihan</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($roles as $no => $role)
+                                            @foreach ($users as $no => $user)
                                                 <tr>
                                                     <th scope="row">
-                                                        {{ ++$no + ($roles->currentPage() - 1) * $roles->perPage() }}
+                                                        {{ ++$no + ($users->currentPage() - 1) * $users->perPage() }}
                                                     </th>
                                                     <td>
-                                                        {{ $role->name }}
+                                                        {{ $user->name }}
                                                     </td>
                                                     <td>
-                                                        @foreach ($role->permissions as $permission)
-                                                            <span
-                                                                class="badge badge-primary shadow border-0 ms-2 mb-1 mt-1">
-                                                                {{ $permission->name }}
+                                                        {{ $user->username }}
+                                                    </td>
+                                                    <td>
+                                                        @foreach ($user->roles as $role)
+                                                            <span class="badge badge-primary shadow border-0 ms-2 mb-2">
+                                                                {{ $role->name }}
                                                             </span>
                                                         @endforeach
                                                     </td>
                                                     <td class="text-center">
 
                                                         @can('roles.edit')
-                                                            <a href="{{ route('app.roles.edit', $role->id) }}"
+                                                            <a href="{{ route('app.users.edit', $user->id) }}"
                                                                 class="btn btn-success btn-sm">
                                                                 <i class="fa fa-pencil-alt me-1" title="Edit Hak Akses">
                                                                 </i>
                                                             </a>
                                                         @endcan
                                                         @can('roles.delete')
-                                                            <button onclick="Delete(this.id)" id="{{ $role->id }}"
+                                                            <button onclick="Delete(this.id)" id="{{ $user->id }}"
                                                                 class="btn btn-danger btn-sm"><i class="fa fa-trash"
                                                                     title="Hapus Hak Akses"></i>
                                                             </button>
@@ -78,17 +81,18 @@
                                                     </td>
                                                 </tr>
                                             @endforeach
+
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                             <div class="card-footer pull-right">
-                                {{ $roles->links('vendor.pagination.bootstrap-4') }}
+                                {{ $users->links('vendor.pagination.bootstrap-4') }}
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-4">
-                        @include('pages.app.roles._create')
+                        @include('pages.app.users._create')
                     </div>
                 </div>
             </div>
@@ -123,7 +127,7 @@
 
                     //ajax delete
                     jQuery.ajax({
-                        url: "/app/roles/" + id,
+                        url: "/app/users/" + id,
                         data: {
                             "id": id,
                             "_token": token

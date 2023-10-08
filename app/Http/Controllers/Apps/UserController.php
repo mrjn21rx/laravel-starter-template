@@ -18,9 +18,11 @@ class UserController extends Controller
     {
         $users = User::when(request()->q, function ($users) {
             $users = $users->where('name', 'like', '%' . request()->q . '%');
-        });
+        })->with('roles')->latest()->paginate(10);
 
-        return view('app.users.index', compact('users'));
+        $roles = Role::all();
+
+        return view('pages.app.users.index', compact('users', 'roles'));
     }
 
     public function store(Request $request)
@@ -29,7 +31,19 @@ class UserController extends Controller
             'name' => 'required|max:200',
             'username' => 'required|max:20|unique:users,username',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|password|confirmed|min:8',
+            'password' => 'required|confirmed|min:8',
+        ], [
+            'name.required' => 'Data Wajib Diisi',
+            'name.max' => 'Data Terlalu Panjang',
+            'username.required' => 'Data Wajib Diisi',
+            'username.max' => 'Data Terlalu Panjang',
+            'username.unique' => 'Data Sudah Terdaftar',
+            'email.required' => 'Data Wajib Diisi',
+            'email.email' => 'Format Email Salah',
+            'email.unique' => 'Email Sudah Terdaftar',
+            'password.required' => 'Data Wajib Diisi',
+            'password.confirmed' => 'Konfirmasi Password Salah',
+            'password.min' => 'Password Terlalu Pendek',
         ]);
 
         $user = User::create([
@@ -40,7 +54,7 @@ class UserController extends Controller
         ]);
 
         //assign role to user
-        $user->assignRole($request->role);
+        $user->assignRole($request->roles);
 
         //redirect back to roles page
         if ($user) {
@@ -57,16 +71,16 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $roles = Role::all();
 
-        return view('app.users.edit', compact('user', 'roles'));
+        return view('pages.app.users.edit', compact('user', 'roles'));
     }
 
     public function update(Request $request, User $user)
     {
         $this->validate($request, [
             'name' => 'required|max:200',
-            'username' => 'required|max:200|unique:users,username' . $user->id,
-            'email' => 'required|email|unique:users,email' . $user->id,
-            'password' => 'nullable|confirmed',
+            'username' => 'required|max:200|unique:users,username,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable',
         ]);
 
         //check if password is empty

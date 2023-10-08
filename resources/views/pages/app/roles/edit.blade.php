@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Blank Page')
+@section('title', 'Edit Hak Akses')
 
 @push('style')
     <!-- CSS Libraries -->

@@ -20,24 +20,17 @@
                 </ul>
             </li>
             <li class="menu-header">Manajemen Pengguna</li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i>
-                    <span>Layout</span></a>
-                <ul class="dropdown-menu">
-                    <li class="{{ Request::is('layout-default-layout') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('app.permissions') }}">Izin Akses</a>
-                    </li>
-                    <li class="{{ Request::is('transparent-sidebar') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('app.roles.index') }}">Hak Akses</a>
-                    </li>
-                    <li class="{{ Request::is('layout-top-navigation') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('layout-top-navigation') }}">Top Navigation</a>
-                    </li>
-                </ul>
+            <li class="{{ Request::is('blank-page') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('app.users.index') }}"><i class="fas fa-user"></i>
+                    <span>Pengguna</span></a>
             </li>
             <li class="{{ Request::is('blank-page') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('blank-page') }}"><i class="far fa-square"></i> <span>Blank
-                        Page</span></a>
+                <a class="nav-link" href="{{ route('app.permissions') }}"><i class="fas fa-lock"></i>
+                    <span>Izin Akses</span></a>
+            </li>
+            <li class="{{ Request::is('blank-page') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('app.roles.index') }}"><i class="fas fa-key"></i>
+                    <span>Hak Akses</span></a>
             </li>
 
         </ul>
